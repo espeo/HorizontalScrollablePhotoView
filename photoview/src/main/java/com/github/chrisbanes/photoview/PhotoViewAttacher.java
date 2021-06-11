@@ -39,20 +39,17 @@ import android.widget.OverScroller;
 public class PhotoViewAttacher implements View.OnTouchListener,
         View.OnLayoutChangeListener {
 
-    private static float DEFAULT_MAX_SCALE = 3.0f;
-    private static float DEFAULT_MID_SCALE = 1.75f;
-    private static float DEFAULT_MIN_SCALE = 1.0f;
-    private static int DEFAULT_ZOOM_DURATION = 200;
+    private static final float DEFAULT_MAX_SCALE = 3.0f;
+    private static final float DEFAULT_MID_SCALE = 1.75f;
+    private static final float DEFAULT_MIN_SCALE = 1.0f;
+    private static final int DEFAULT_ZOOM_DURATION = 200;
 
-    private static final int HORIZONTAL_EDGE_NONE = -1;
-    private static final int HORIZONTAL_EDGE_LEFT = 0;
-    private static final int HORIZONTAL_EDGE_RIGHT = 1;
-    private static final int HORIZONTAL_EDGE_BOTH = 2;
-    private static final int VERTICAL_EDGE_NONE = -1;
-    private static final int VERTICAL_EDGE_TOP = 0;
-    private static final int VERTICAL_EDGE_BOTTOM = 1;
-    private static final int VERTICAL_EDGE_BOTH = 2;
-    private static int SINGLE_TOUCH = 1;
+    private static final int SINGLE_TOUCH = 1;
+
+    private static final int NO_HORIZONTAL_EDGE_VISIBLE = -1;
+    private static final int LEFT_EDGE_VISIBLE = 0;
+    private static final int RIGHT_EDGE_VISIBLE = 1;
+    private static final int BOTH_HORIZONTAL_EDGES_VISIBLE = 2;
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     private int mZoomDuration = DEFAULT_ZOOM_DURATION;
@@ -63,7 +60,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
 
-    private ImageView mImageView;
+    private final ImageView mImageView;
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
@@ -88,12 +85,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnViewDragListener mOnViewDragListener;
 
     private FlingRunnable mCurrentFlingRunnable;
-    private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
-    private int mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+
+    private int horizontalEdgesVisibility = NO_HORIZONTAL_EDGE_VISIBLE;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
@@ -118,11 +115,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              */
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
-                if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
-                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f)
-                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f)
-                        || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f)
-                        || (mVerticalScrollEdge == VERTICAL_EDGE_BOTTOM && dy <= -1f)) {
+                if (((horizontalEdgesVisibility == LEFT_EDGE_VISIBLE
+                        || horizontalEdgesVisibility == BOTH_HORIZONTAL_EDGES_VISIBLE) && dx >= 1f)
+                        || ((horizontalEdgesVisibility == RIGHT_EDGE_VISIBLE
+                        || horizontalEdgesVisibility == BOTH_HORIZONTAL_EDGES_VISIBLE) && dx <= -1f)) {
                     if (parent != null) {
                         parent.requestDisallowInterceptTouchEvent(false);
                     }
@@ -347,6 +343,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     if (parent != null) {
                         parent.requestDisallowInterceptTouchEvent(true);
                     }
+
+                    horizontalEdgesVisibility = getHorizontalEdgesVisibility();
+
                     // If we're flinging, and the user presses down, cancel
                     // fling
                     cancelFling();
@@ -388,6 +387,24 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         }
         return handled;
+    }
+
+    private int getHorizontalEdgesVisibility() {
+        final RectF rect = getDisplayRect(getDrawMatrix());
+        if (rect == null) {
+            return NO_HORIZONTAL_EDGE_VISIBLE;
+        }
+        final float width = rect.width();
+        final int viewWidth = getImageViewWidth(mImageView);
+        if (width <= viewWidth) {
+            return BOTH_HORIZONTAL_EDGES_VISIBLE;
+        } else if ((int) rect.left == 0) {
+            return LEFT_EDGE_VISIBLE;
+        } else if ((int) rect.right <= viewWidth) {
+            return RIGHT_EDGE_VISIBLE;
+        } else {
+            return NO_HORIZONTAL_EDGE_VISIBLE;
+        }
     }
 
     public void setAllowParentInterceptOnEdge(boolean allow) {
@@ -672,16 +689,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     deltaY = (viewHeight - height) / 2 - rect.top;
                     break;
             }
-            mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
         } else if (rect.top > 0) {
-            mVerticalScrollEdge = VERTICAL_EDGE_TOP;
             deltaY = -rect.top;
         } else if (rect.bottom < viewHeight) {
-            mVerticalScrollEdge = VERTICAL_EDGE_BOTTOM;
             deltaY = viewHeight - rect.bottom;
-        } else {
-            mVerticalScrollEdge = VERTICAL_EDGE_NONE;
         }
+
         final int viewWidth = getImageViewWidth(mImageView);
         if (width <= viewWidth) {
             switch (mScaleType) {
@@ -695,15 +708,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     deltaX = (viewWidth - width) / 2 - rect.left;
                     break;
             }
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
         } else if (rect.left > 0) {
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_LEFT;
             deltaX = -rect.left;
         } else if (rect.right < viewWidth) {
             deltaX = viewWidth - rect.right;
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_RIGHT;
-        } else {
-            mHorizontalScrollEdge = HORIZONTAL_EDGE_NONE;
         }
         // Finally actually translate the matrix
         mSuppMatrix.postTranslate(deltaX, deltaY);
