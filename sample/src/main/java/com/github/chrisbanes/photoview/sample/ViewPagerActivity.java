@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
-import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.HorizontalScrollablePhotoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
@@ -49,7 +49,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
+            HorizontalScrollablePhotoView photoView = new HorizontalScrollablePhotoView(container.getContext());
             photoView.setImageResource(sDrawables[position]);
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

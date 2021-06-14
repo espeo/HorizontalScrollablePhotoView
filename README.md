@@ -40,7 +40,7 @@ dependencies {
 ## Usage
 There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness, here is all that is required to get PhotoView working:
 ```xml
-<com.github.chrisbanes.photoview.PhotoView
+<com.github.espeo.HorizontalScrollablePhotoView
     android:id="@+id/photo_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>

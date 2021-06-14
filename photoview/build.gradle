@@ -22,9 +22,9 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                group = 'com.github.chrisbanes'
-                artifactId = 'PhotoView'
-                version = '2.3.0'
+                group = 'com.github.espeo'
+                artifactId = 'HorizontalScrollablePhotoView'
+                version = '2.3.1'
 
                 // Adds javadocs and sources as separate jars.
                 artifact androidJavadocsJar
@@ -49,7 +49,7 @@ afterEvaluate {
                     scm {
                         connection = 'scm:git@github.com/chrisbanes/PhotoView.git'
                         developerConnection = 'scm:git@github.com/chrisbanes/PhotoView.git'
-                        url = 'https://github.com/chrisbanes/PhotoView'
+                        url = 'https://github.com/espeo/HorizontalScrollablePhotoView'
                     }
                 }
             }

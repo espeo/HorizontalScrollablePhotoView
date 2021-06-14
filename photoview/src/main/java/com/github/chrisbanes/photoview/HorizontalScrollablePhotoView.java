@@ -30,20 +30,20 @@ import androidx.appcompat.widget.AppCompatImageView;
  * is accomplished
  */
 @SuppressWarnings("unused")
-public class PhotoView extends AppCompatImageView {
+public class HorizontalScrollablePhotoView extends AppCompatImageView {
 
     private PhotoViewAttacher attacher;
     private ScaleType pendingScaleType;
 
-    public PhotoView(Context context) {
+    public HorizontalScrollablePhotoView(Context context) {
         this(context, null);
     }
 
-    public PhotoView(Context context, AttributeSet attr) {
+    public HorizontalScrollablePhotoView(Context context, AttributeSet attr) {
         this(context, attr, 0);
     }
 
-    public PhotoView(Context context, AttributeSet attr, int defStyle) {
+    public HorizontalScrollablePhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         init();
     }

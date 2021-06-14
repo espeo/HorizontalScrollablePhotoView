@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
-import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.HorizontalScrollablePhotoView;
 
 import java.util.Random;
 
@@ -44,7 +44,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
     static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
 
-    private PhotoView mPhotoView;
+    private HorizontalScrollablePhotoView mPhotoView;
     private TextView mCurrMatrixTv;
 
     private Toast mCurrentToast;
