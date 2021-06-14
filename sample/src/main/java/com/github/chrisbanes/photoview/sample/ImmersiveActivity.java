@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.HorizontalScrollablePhotoView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +25,7 @@ public class ImmersiveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_immersive);
 
-        HorizontalScrollablePhotoView photoView = findViewById(R.id.photo_view);
+        PhotoView photoView = findViewById(R.id.photo_view);
         Picasso.with(this)
                 .load("http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg")
                 .into(photoView);

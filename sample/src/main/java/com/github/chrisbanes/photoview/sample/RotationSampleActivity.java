@@ -19,14 +19,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 
-import com.github.chrisbanes.photoview.HorizontalScrollablePhotoView;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class RotationSampleActivity extends AppCompatActivity {
 
-    private HorizontalScrollablePhotoView photo;
+    private PhotoView photo;
     private final Handler handler = new Handler();
     private boolean rotating = false;
 
