@@ -22,8 +22,8 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                group = 'com.github.espeo'
-                artifactId = 'HorizontalScrollablePhotoView'
+                group = 'com.github.chrisbanes'
+                artifactId = 'PhotoView'
                 version = '2.3.1'
 
                 // Adds javadocs and sources as separate jars.
